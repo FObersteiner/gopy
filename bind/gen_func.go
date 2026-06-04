@@ -170,7 +170,7 @@ func (g *pyGen) genFuncSig(sym *symbol, fsym *Func) bool {
 		} else {
 			g.pybuild.Printf("retval('%s')", sret.cpyname)
 		}
-		goRet = fmt.Sprintf("%s", sret.cgoname)
+		goRet = sret.cgoname
 	} else {
 		g.pybuild.Printf("None")
 	}
@@ -303,7 +303,7 @@ if __err != nil {
 		case ifchandle && arg.sym.goname == "interface{}":
 			na = fmt.Sprintf(`gopyh.VarFromHandle((gopyh.CGoHandle)(%s), "interface{}")`, anm)
 		case arg.sym.isSignature():
-			na = fmt.Sprintf("%s", arg.sym.py2go)
+			na = arg.sym.py2go
 		case arg.sym.py2go != "":
 			na = fmt.Sprintf("%s(%s)%s", arg.sym.py2go, anm, arg.sym.py2goParenEx)
 		default:

@@ -22,34 +22,34 @@ import (
 var (
 	testBackends = map[string]string{}
 	features     = map[string][]string{
-		"_examples/hi":          []string{"py3"},
-		"_examples/gobytes":     []string{"py3"},
-		"_examples/funcs":       []string{"py3"},
-		"_examples/sliceptr":    []string{"py3"},
-		"_examples/simple":      []string{"py3"},
-		"_examples/empty":       []string{"py3"},
-		"_examples/named":       []string{"py3"},
-		"_examples/structs":     []string{"py3"},
-		"_examples/consts":      []string{"py3"},
-		"_examples/vars":        []string{"py3"},
-		"_examples/seqs":        []string{"py3"},
-		"_examples/cgo":         []string{"py3"},
-		"_examples/pyerrors":    []string{"py3"},
-		"_examples/iface":       []string{"py3"},
-		"_examples/pointers":    []string{"py3"},
-		"_examples/arrays":      []string{"py3"},
-		"_examples/slices":      []string{"py3"},
-		"_examples/maps":        []string{"py3"},
-		"_examples/gostrings":   []string{"py3"},
-		"_examples/rename":      []string{"py3"},
-		"_examples/lot":         []string{"py3"},
-		"_examples/unicode":     []string{"py3"},
-		"_examples/osfile":      []string{"py3"},
-		"_examples/gopygc":      []string{"py3"},
-		"_examples/cstrings":    []string{"py3"},
-		"_examples/pkgconflict": []string{"py3"},
-		"_examples/variadic":    []string{"py3"},
-		"_examples/gilstring":   []string{"py3"},
+		"_examples/hi":          {"py3"},
+		"_examples/gobytes":     {"py3"},
+		"_examples/funcs":       {"py3"},
+		"_examples/sliceptr":    {"py3"},
+		"_examples/simple":      {"py3"},
+		"_examples/empty":       {"py3"},
+		"_examples/named":       {"py3"},
+		"_examples/structs":     {"py3"},
+		"_examples/consts":      {"py3"},
+		"_examples/vars":        {"py3"},
+		"_examples/seqs":        {"py3"},
+		"_examples/cgo":         {"py3"},
+		"_examples/pyerrors":    {"py3"},
+		"_examples/iface":       {"py3"},
+		"_examples/pointers":    {"py3"},
+		"_examples/arrays":      {"py3"},
+		"_examples/slices":      {"py3"},
+		"_examples/maps":        {"py3"},
+		"_examples/gostrings":   {"py3"},
+		"_examples/rename":      {"py3"},
+		"_examples/lot":         {"py3"},
+		"_examples/unicode":     {"py3"},
+		"_examples/osfile":      {"py3"},
+		"_examples/gopygc":      {"py3"},
+		"_examples/cstrings":    {"py3"},
+		"_examples/pkgconflict": {"py3"},
+		"_examples/variadic":    {"py3"},
+		"_examples/gilstring":   {"py3"},
 	}
 
 	testEnvironment = os.Environ()
@@ -160,22 +160,22 @@ package hi exposes a few Go functions to be wrapped and used from Python.
 --- hi.Set_Anon(hi.NewPerson('you', 24))...
 --- hi.Anon(): hi.Person{Name="you", Age=24}
 --- doc(hi.Hi)...
-Hi() 
-	
+Hi()
+
 	Hi prints hi from Go
-	
+
 --- hi.Hi()...
 --- doc(hi.Hello)...
-Hello(str s) 
-	
+Hello(str s)
+
 	Hello prints a greeting from Go
-	
+
 --- hi.Hello('you')...
 --- doc(hi.Add)...
 Add(int i, int j) int
-	
+
 	Add returns the sum of its arguments.
-	
+
 --- hi.Add(1, 41)...
 42
 --- hi.Concat('4', '2')...
@@ -189,15 +189,15 @@ Person is a simple struct
 
 --- p = hi.Person()...
 --- p: hi.Person{Name="", Age=0}
---- p.Name: 
+--- p.Name:
 --- p.Age: 0
 --- doc(hi.Greet):
 Greet() str
-		
+
 		Greet sends greetings
-		
+
 --- p.Greet()...
-Hello, I am 
+Hello, I am
 --- p.String()...
 hi.Person{Name="", Age=0}
 --- doc(p):
@@ -842,7 +842,7 @@ func TestGilString(t *testing.T) {
 				t.Fatalf("error running python module: err=%v\n%s", err, string(buf))
 			}
 
-			got := strings.Replace(string(buf), "\r\n", "\n", -1)
+			got := strings.ReplaceAll(string(buf), "\r\n", "\n")
 			want := "OK\n"
 			if got != want {
 				t.Fatalf("got:\n%s\nwant:\n%s", got, want)
@@ -943,7 +943,7 @@ don't modify manually.
 			allBackends[backend] = true
 		}
 	}
-	for backend, _ := range allBackends {
+	for backend := range allBackends {
 		allBackendsSorted = append(allBackendsSorted, backend)
 	}
 	sort.Strings(featuresSorted)
@@ -993,8 +993,8 @@ auto-generated file SUPPORT_MATRIX.md hasn't been updated. Please run 'go test'
 with environment variable GOPY_GENERATE_SUPPORT_MATRIX=1 to regenerate
 SUPPORT_MATRIX.md and commit the changes to SUPPORT_MATRIX.md onto git.
 `
-	if bytes.Compare(buf.Bytes(), src) != 0 {
-		t.Fatalf(msg)
+	if !bytes.Equal(buf.Bytes(), src) {
+		t.Fatalf("%s", msg)
 	}
 }
 
@@ -1118,8 +1118,8 @@ func testPkgBackend(t *testing.T, pyvm string, table pkg) {
 	}
 
 	var (
-		got  = strings.Replace(string(buf), "\r\n", "\n", -1)
-		want = strings.Replace(string(table.want), "\r\n", "\n", -1)
+		got  = strings.ReplaceAll(string(buf), "\r\n", "\n")
+		want = strings.ReplaceAll(string(table.want), "\r\n", "\n")
 	)
 	if !reflect.DeepEqual(got, want) {
 		diffTxt := ""

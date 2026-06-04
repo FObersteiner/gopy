@@ -26,7 +26,7 @@ func New() map[int]float64 {
 
 func Keys(t map[int]float64) []int {
 	var keys []int
-	for k, _ := range t {
+	for k := range t {
 		keys = append(keys, k)
 	}
 

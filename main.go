@@ -5,14 +5,17 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
 	"os"
 	"path"
+	"strconv"
+
+	"flag"
 
 	"github.com/gonuts/commander"
-	"github.com/gonuts/flag"
 	"github.com/pkg/errors"
 
 	"github.com/go-python/gopy/bind"
@@ -59,11 +62,19 @@ func run(args []string) error {
 	}
 
 	appArgs := app.Flag.Args()
-	err = app.Dispatch(appArgs)
+	err = app.Dispatch(context.Background(), appArgs)
 	if err != nil {
 		return fmt.Errorf("error dispatching command: %v", err)
 	}
 	return nil
+}
+
+// getBoolFlag retrieves a bool flag value from a stdlib flag.FlagSet.
+// This replaces the gonuts/flag Value.Get().(bool) pattern which is not
+// available in the standard library flag package.
+func getBoolFlag(fs flag.FlagSet, name string) bool {
+	b, _ := strconv.ParseBool(fs.Lookup(name).Value.String())
+	return b
 }
 
 func main() {

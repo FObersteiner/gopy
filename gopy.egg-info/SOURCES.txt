@@ -1,0 +1,8 @@
+LICENSE
+README.md
+pyproject.toml
+gopy.egg-info/PKG-INFO
+gopy.egg-info/SOURCES.txt
+gopy.egg-info/dependency_links.txt
+gopy.egg-info/requires.txt
+gopy.egg-info/top_level.txt

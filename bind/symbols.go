@@ -76,7 +76,7 @@ func (k symkind) String() string {
 }
 
 var pyKeywords = map[string]struct{}{
-	"False": struct{}{}, "None": struct{}{}, "True": struct{}{}, "and": struct{}{}, "as": struct{}{}, "assert": struct{}{}, "break": struct{}{}, "class": struct{}{}, "continue": struct{}{}, "def": struct{}{}, "del": struct{}{}, "elif": struct{}{}, "else": struct{}{}, "except": struct{}{}, "finally": struct{}{}, "for": struct{}{}, "from": struct{}{}, "global": struct{}{}, "if": struct{}{}, "import": struct{}{}, "in": struct{}{}, "is": struct{}{}, "lambda": struct{}{}, "nonlocal": struct{}{}, "not": struct{}{}, "or": struct{}{}, "pass": struct{}{}, "raise": struct{}{}, "return": struct{}{}, "try": struct{}{}, "while": struct{}{}, "with": struct{}{}, "yield": struct{}{}, "self": struct{}{},
+	"False": {}, "None": {}, "True": {}, "and": {}, "as": {}, "assert": {}, "break": {}, "class": {}, "continue": {}, "def": {}, "del": {}, "elif": {}, "else": {}, "except": {}, "finally": {}, "for": {}, "from": {}, "global": {}, "if": {}, "import": {}, "in": {}, "is": {}, "lambda": {}, "nonlocal": {}, "not": {}, "or": {}, "pass": {}, "raise": {}, "return": {}, "try": {}, "while": {}, "with": {}, "yield": {}, "self": {},
 }
 
 // pySafeName returns a name that python will not barf on
@@ -495,17 +495,17 @@ func (sym *symtab) typeGoName(t types.Type) string {
 
 // typeIdName returns typeGoName with . -> _ -- this should always be used for id
 func (sym *symtab) typeIdName(t types.Type) string {
-	idn := strings.Replace(sym.typeGoName(t), ".", "_", -1)
+	idn := strings.ReplaceAll(sym.typeGoName(t), ".", "_")
 	if _, isary := t.(*types.Array); isary {
 		idn = strings.Replace(idn, "[", "Array_", 1)
 		idn = strings.Replace(idn, "]", "_", 1)
 	}
-	idn = strings.Replace(idn, "[]", "Slice_", -1)
-	idn = strings.Replace(idn, "map[", "Map_", -1)
-	idn = strings.Replace(idn, "[", "_", -1)
-	idn = strings.Replace(idn, "]", "_", -1)
-	idn = strings.Replace(idn, "{}", "_", -1)
-	idn = strings.Replace(idn, "*", "Ptr_", -1)
+	idn = strings.ReplaceAll(idn, "[]", "Slice_")
+	idn = strings.ReplaceAll(idn, "map[", "Map_")
+	idn = strings.ReplaceAll(idn, "[", "_")
+	idn = strings.ReplaceAll(idn, "]", "_")
+	idn = strings.ReplaceAll(idn, "{}", "_")
+	idn = strings.ReplaceAll(idn, "*", "Ptr_")
 	return idn
 }
 
@@ -728,7 +728,7 @@ func (sym *symtab) ZeroToGo(typ types.Type, sy *symbol) (string, error) {
 		case bk == types.String:
 			bstr += `C.GoString(nil)`
 		case bk == types.Bool:
-			bstr += fmt.Sprintf("false")
+			bstr += "false"
 		}
 	default:
 		return "", fmt.Errorf("ZeroToGo: type not handled: %s", typ.String())

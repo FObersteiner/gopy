@@ -68,10 +68,10 @@ func hasError(sig *types.Signature) bool {
 		}
 	}
 
-	switch {
-	case nerr == 0:
+	switch nerr {
+	case 0:
 		return false
-	case nerr == 1:
+	case 1:
 		return true
 	default:
 		panic(fmt.Errorf(

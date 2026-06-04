@@ -1,0 +1,11 @@
+[project]
+name = "gopy"
+version = "0.4.11"
+description = "Python dependencies for gopy (Go-Python bindings)"
+requires-python = ">=3.9"
+dependencies = [
+    "pybindgen",
+]
+
+[tool.setuptools]
+packages = []

@@ -4,57 +4,48 @@ GOCMD=go
 GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
-GOGET=$(GOCMD) get
 
-DIRS=`go list ./...`
-
-PYTHON=python3
-PIP=$(PYTHON) -m pip
+VENV=.venv
+PYTHON=$(VENV)/bin/python3
 
 all: build
 
-build: 
-	@echo "GO111MODULE = $(value GO111MODULE)"
-	$(GOBUILD) -v $(DIRS)
+build:
+	$(GOBUILD) -v ./...
 
-test: 
-	@echo "GO111MODULE = $(value GO111MODULE)"
-	$(GOTEST) -v $(DIRS)
+test: venv
+	PATH="$(shell pwd)/$(VENV)/bin:$(PATH)" $(GOTEST) -v ./...
 
-clean: 
-	@echo "GO111MODULE = $(value GO111MODULE)"
+clean:
 	$(GOCLEAN) ./...
 
 fmts:
 	gofmt -s -w .
-	
-vet:
-	@echo "GO111MODULE = $(value GO111MODULE)"
-	$(GOCMD) vet $(DIRS) | grep -v unkeyed
 
-tidy: export GO111MODULE = on
+vet:
+	$(GOCMD) vet ./... | grep -v unkeyed; true
+
 tidy:
-	@echo "GO111MODULE = $(value GO111MODULE)"
 	go mod tidy
-	
-mod-update: export GO111MODULE = on
+
 mod-update:
-	@echo "GO111MODULE = $(value GO111MODULE)"
 	go get -u ./...
 	go mod tidy
 
-prereq:
-	@echo "Installing python prerequisites -- ignore err if already installed:"
-	- $(PIP) install -r requirements.txt
-	@echo
-	@echo "if this fails, you may see errors like this:"
-	@echo "    Undefined symbols for architecture x86_64:"
-	@echo "    _PyInit__gi, referenced from:..."
-	@echo
+# --- Python / uv ---
 
-	
-# NOTE: MUST update version number here prior to running 'make release' and edit this file! 
-VERS=v0.4.10
+venv:
+	uv venv --seed -p 3.13 $(VENV)
+	uv pip install -p $(PYTHON) .
+
+prereq: venv
+
+clean-venv:
+	rm -rf $(VENV)
+
+
+# NOTE: MUST update version number here prior to running 'make release' and edit this file!
+VERS=v0.4.11
 PACKAGE=main
 GIT_COMMIT=`git rev-parse --short HEAD`
 VERS_DATE=`date -u +%Y-%m-%d\ %H:%M`
@@ -78,4 +69,3 @@ release:
 	git tag -a $(VERS) -m "$(VERS) release"
 	git push
 	git push origin --tags
-

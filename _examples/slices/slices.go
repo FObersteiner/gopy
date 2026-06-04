@@ -33,14 +33,14 @@ type SliceInt64 []int64
 
 type SliceComplex []complex128
 
-type SliceIface []interface{}
+type SliceIface []any
 
 type S struct {
 	Name string
 }
 
 func CreateSSlice() []*S {
-	return []*S{&S{"S0"}, &S{"S1"}, &S{"S2"}}
+	return []*S{{"S0"}, {"S1"}, {"S2"}}
 }
 
 func PrintSSlice(ss []*S) {

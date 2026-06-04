@@ -34,7 +34,7 @@ func MapValue() map[int]int {
 }
 
 func MapValueStruct() map[int]StructA {
-	return map[int]StructA{1: StructA{3}}
+	return map[int]StructA{1: {3}}
 }
 
 func ExternalType() *bytes.Buffer {

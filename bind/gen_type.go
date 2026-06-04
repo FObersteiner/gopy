@@ -80,7 +80,7 @@ func (g *pyGen) genTypeHandlePtr(sym *symbol) {
 	}
 	g.gofile.Outdent()
 	g.gofile.Printf("}\n")
-	g.gofile.Printf("func %s(p interface{})%s CGoHandle {\n", sym.go2py, sym.go2pyParenEx)
+	g.gofile.Printf("func %s(p any)%s CGoHandle {\n", sym.go2py, sym.go2pyParenEx)
 	g.gofile.Indent()
 	g.gofile.Printf("return CGoHandle(gopyh.Register(\"%s\", p))\n", gonm)
 	g.gofile.Outdent()
@@ -122,7 +122,7 @@ func (g *pyGen) genTypeHandleImplPtr(sym *symbol) {
 	g.gofile.Printf("return *p\n")
 	g.gofile.Outdent()
 	g.gofile.Printf("}\n")
-	g.gofile.Printf("func %s(p interface{})%s CGoHandle {\n", sym.go2py, sym.go2pyParenEx)
+	g.gofile.Printf("func %s(p any)%s CGoHandle {\n", sym.go2py, sym.go2pyParenEx)
 	g.gofile.Indent()
 	g.gofile.Printf("return CGoHandle(gopyh.Register(\"%s\", p))\n", gonm)
 	g.gofile.Outdent()
@@ -159,7 +159,7 @@ func (g *pyGen) genTypeHandle(sym *symbol) {
 	}
 	g.gofile.Outdent()
 	g.gofile.Printf("}\n")
-	g.gofile.Printf("func %s(p interface{})%s CGoHandle {\n", sym.go2py, sym.go2pyParenEx)
+	g.gofile.Printf("func %s(p any)%s CGoHandle {\n", sym.go2py, sym.go2pyParenEx)
 	g.gofile.Indent()
 	g.gofile.Printf("return CGoHandle(gopyh.Register(\"%s\", p))\n", gonm)
 	g.gofile.Outdent()

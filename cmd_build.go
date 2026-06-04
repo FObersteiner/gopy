@@ -14,8 +14,9 @@ import (
 	"runtime"
 	"strings"
 
+	"flag"
+
 	"github.com/gonuts/commander"
-	"github.com/gonuts/flag"
 
 	"github.com/go-python/gopy/bind"
 )
@@ -58,17 +59,17 @@ func gopyRunCmdBuild(cmdr *commander.Command, args []string) error {
 	}
 
 	cfg := NewBuildCfg()
-	cfg.OutputDir = cmdr.Flag.Lookup("output").Value.Get().(string)
-	cfg.Name = cmdr.Flag.Lookup("name").Value.Get().(string)
-	cfg.Main = cmdr.Flag.Lookup("main").Value.Get().(string)
-	cfg.VM = cmdr.Flag.Lookup("vm").Value.Get().(string)
-	cfg.PkgPrefix = cmdr.Flag.Lookup("package-prefix").Value.Get().(string)
-	cfg.RenameCase = cmdr.Flag.Lookup("rename").Value.Get().(bool)
-	cfg.Symbols = cmdr.Flag.Lookup("symbols").Value.Get().(bool)
-	cfg.NoWarn = cmdr.Flag.Lookup("no-warn").Value.Get().(bool)
-	cfg.NoMake = cmdr.Flag.Lookup("no-make").Value.Get().(bool)
-	cfg.DynamicLinking = cmdr.Flag.Lookup("dynamic-link").Value.Get().(bool)
-	cfg.BuildTags = cmdr.Flag.Lookup("build-tags").Value.Get().(string)
+	cfg.OutputDir = cmdr.Flag.Lookup("output").Value.String()
+	cfg.Name = cmdr.Flag.Lookup("name").Value.String()
+	cfg.Main = cmdr.Flag.Lookup("main").Value.String()
+	cfg.VM = cmdr.Flag.Lookup("vm").Value.String()
+	cfg.PkgPrefix = cmdr.Flag.Lookup("package-prefix").Value.String()
+	cfg.RenameCase = getBoolFlag(cmdr.Flag, "rename")
+	cfg.Symbols = getBoolFlag(cmdr.Flag, "symbols")
+	cfg.NoWarn = getBoolFlag(cmdr.Flag, "no-warn")
+	cfg.NoMake = getBoolFlag(cmdr.Flag, "no-make")
+	cfg.DynamicLinking = getBoolFlag(cmdr.Flag, "dynamic-link")
+	cfg.BuildTags = cmdr.Flag.Lookup("build-tags").Value.String()
 
 	bind.NoWarn = cfg.NoWarn
 	bind.NoMake = cfg.NoMake

@@ -199,7 +199,7 @@ func (g *pyGen) genStructMemberGetter(s *Struct, i int, f types.Object) {
 	g.pywrap.Indent()
 	if gdoc := g.pkg.getDoc(s.Obj().Name(), f); gdoc != "" {
 		g.pywrap.Printf(`"""`)
-		g.pywrap.Printf(gdoc)
+		g.pywrap.Printf("%s", gdoc)
 		g.pywrap.Println(`"""`)
 	}
 	if ret.hasHandle() {
