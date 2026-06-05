@@ -261,9 +261,31 @@ func (g *pyGen) genFuncBody(sym *symbol, fsym *Func) {
 		}
 	}
 
-	g.gofile.Printf("_saved_thread := C.PyEval_SaveThread()\n")
-	if !rvIsErr && nres != 2 {
-		g.gofile.Printf("defer C.PyEval_RestoreThread(_saved_thread)\n")
+	// Check if any parameter or return value uses PyObject* (e.g. complex types).
+	// Functions with PyObject* args/returns call Python C API functions from Go
+	// (e.g. PyComplex_FromDoubles, PyComplex_AsCComplex) which REQUIRE the GIL.
+	// Releasing the GIL via PyEval_SaveThread would cause a segfault.
+	needsGIL := false
+	for _, arg := range args {
+		if arg.sym != nil && arg.sym.cpyname == "PyObject*" {
+			needsGIL = true
+			break
+		}
+	}
+	if !needsGIL {
+		for _, ret := range res {
+			if ret.sym != nil && ret.sym.cpyname == "PyObject*" {
+				needsGIL = true
+				break
+			}
+		}
+	}
+
+	if !needsGIL {
+		g.gofile.Printf("_saved_thread := C.PyEval_SaveThread()\n")
+		if !rvIsErr && nres != 2 {
+			g.gofile.Printf("defer C.PyEval_RestoreThread(_saved_thread)\n")
+		}
 	}
 
 	if isMethod {

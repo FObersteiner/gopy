@@ -99,8 +99,6 @@ static inline void gopy_err_handle() {
 static void _gopy_clear_go_tls(void) {
 #if defined(__x86_64__) && defined(__APPLE__)
 	__asm__ volatile("movq $0, %%%%gs:0x30" ::: "memory");
-#elif defined(__x86_64__) && defined(__linux__)
-	__asm__ volatile("movq $0, %%%%fs:-8" ::: "memory");
 #endif
 }
 %[8]s
@@ -401,13 +399,13 @@ try:
 	import collections.abc as _collections_abc
 except ImportError:
 	_collections_abc = collections
-	
+
 class GoClass(object):
 	"""GoClass is the base class for all GoPy wrapper classes"""
 	def __init__(self):
 		self.handle = 0
 
-# use go.nil for nil pointers 
+# use go.nil for nil pointers
 nil = GoClass()
 
 # need to explicitly initialize it
@@ -460,7 +458,7 @@ build:
 	# generated %[1]s.py python wrapper imports this c-code package
 	%[9]s
 	$(GCC) %[1]s.c %[6]s %[1]s_go$(LIBEXT) -o _%[1]s$(LIBEXT) $(CFLAGS) $(LDFLAGS) -fPIC --shared -w
-	
+
 `
 
 	// exe version of template: 3 = gencmd, 4 = vm, 5 = libext
@@ -501,7 +499,7 @@ build:
 	# build the executable
 	- rm %[1]s_go$(LIBEXT)
 	$(GOBUILD) -o py%[1]s
-	
+
 `
 )
 
