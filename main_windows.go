@@ -7,7 +7,7 @@
 
 package main
 
-import "github.com/go-python/gopy/bind"
+import "github.com/FObersteiner/gopy/bind"
 
 const (
 	libExt       = ".pyd"

@@ -1,5 +1,3 @@
-# Basic Go makefile
-
 GOCMD=go
 GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
@@ -7,6 +5,7 @@ GOTEST=$(GOCMD) test
 
 VENV=.venv
 PYTHON=$(VENV)/bin/python3
+PYVERS=3.13
 
 all: build
 
@@ -35,7 +34,8 @@ mod-update:
 # --- Python / uv ---
 
 venv:
-	uv venv --seed -p 3.13 $(VENV)
+	rm -r $(VENV)
+	uv venv --seed -p $(PYVERS) $(VENV)
 	uv pip install -p $(PYTHON) .
 
 prereq: venv

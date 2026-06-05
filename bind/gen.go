@@ -108,7 +108,7 @@ static void _gopy_clear_go_tls(void) {
 import "C"
 import (
 	"runtime"
-	"github.com/go-python/gopy/gopyh" // handler
+	"github.com/FObersteiner/gopy/gopyh" // handler
 	%[6]s
 )
 
